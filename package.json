@@ -25,15 +25,24 @@
     "typescript": "5.9.3"
   },
   "scripts": {
+    "postinstall": "node scripts/ensure-manifest.mjs",
+    "predev": "node scripts/ensure-manifest.mjs",
     "dev": "remotion studio",
+    "prebuild": "node scripts/ensure-manifest.mjs",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
+    "precapture": "node scripts/ensure-manifest.mjs",
     "capture": "node scripts/capture.mjs",
+    "prevalidate-assets": "node scripts/ensure-manifest.mjs",
     "validate-assets": "node scripts/validate-assets.mjs",
+    "precheck": "node scripts/ensure-manifest.mjs",
     "check": "npm run lint && node scripts/check-timeline.mjs && node scripts/validate-assets.mjs",
+    "prerender": "node scripts/ensure-manifest.mjs",
     "render": "node scripts/render.mjs",
-    "render:draft": "node scripts/render.mjs --draft"
+    "prerender:draft": "node scripts/ensure-manifest.mjs",
+    "render:draft": "node scripts/render.mjs --draft",
+    "sfx": "node scripts/generate-sfx.mjs"
   },
   "allowScripts": {
     "esbuild": false

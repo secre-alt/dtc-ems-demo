@@ -4,6 +4,7 @@ Editable Remotion 4.0.547 project for Danao Technological College. Eight scenes,
 
 ```text
 npm run dev
+npm run sfx
 npm run capture -- --public
 npm run capture
 npm run check
@@ -25,3 +26,10 @@ On PowerShell systems that block npm.ps1/npx.ps1, use npm.cmd and npx.cmd.
 Read [capture instructions](docs/CAPTURE_GUIDE.md), [verified storyboard](docs/STORYBOARD.md), and [timed narration](docs/NARRATION.md). The Laravel application is a read-only source; this project does not create demo records or bypass authentication.
 
 New screenshots are excluded from Git and held behind review flags. Keep capture.local.json private. All 21 capture slots now have reviewed real interfaces from the user-confirmed synthetic dataset. Original synthesized whooshes and chimes accompany browser entrances, chapter changes and logo reveals. Narration and music remain unconfigured. Regenerate effects with `node scripts/generate-sfx.mjs`. See docs/VALIDATION.md for saved-state versus unsubmitted-form details.
+
+## Editing shots and sound
+
+- `src/config/shots.json`: captions, step labels and zoom focus. `focus.x` and `focus.y` (0 to 1) set the zoom anchor; `focus.zoom` is the final scale. The values are untuned starting points: check every shot against its real capture.
+- `src/config/timeline.json`: scene timing. The intro, administration and closing cues have fixed offsets in the scene files and `scripts/generate-sfx.mjs`; change both together.
+- Run `npm run sfx` after changing shots or timing.
+- Captures are taken at 2x (3840 x 2160). Older 1x captures still validate, with a warning.

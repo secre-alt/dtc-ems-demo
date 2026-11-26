@@ -1,6 +1,6 @@
 # Timed narration guide
 
-The video includes original synthesized transition whooshes and soft chimes. No voice-over or background music is configured. Record a calm, natural voice and leave space for the interfaces.
+The video includes original synthesized swooshes, ticks, tones and chimes. No voice-over or background music is configured. Record a calm, natural voice and leave space for the interfaces.
 
 | Placement   | Voice-over                                                                                                                                                                                                                                                                  |
 | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -27,4 +27,4 @@ The video includes original synthesized transition whooshes and soft chimes. No 
 4. Add only licensed/original music and effects, recording attribution in `public/assets/audio/LICENSES.txt`. Configure sources and volumes independently in the same config file. Effects should be a pre-aligned stem starting at zero.
 5. Check timing and mix in Studio. Retiming is needed if the duration changes. Suggested volumes are starting points, not measured loudness guarantees.
 
-AAC is encoded from the sound-effects stem. Regenerate the original 28-cue stem with `node scripts/generate-sfx.mjs`; its cue list and provenance are in `public/assets/audio/cues.json`. Synthesis validates duration, finite samples and peak headroom. The effects volume is independent of optional narration and music.
+AAC is encoded from the sound-effects stem. Regenerate the original 48-cue stem with `node scripts/generate-sfx.mjs`; its cue list and provenance are in `public/assets/audio/cues.json`. Synthesis validates duration, finite samples and peak headroom. The effects volume is independent of optional narration and music.
