@@ -4,14 +4,13 @@ import {
   CanvasImage,
   Easing,
   Interactive,
-  Sequence,
   interpolate,
+  interpolateColors,
   spring,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { captures } from "../config/assets";
 import { theme } from "../config/theme";
 
 export const AnimatedText = ({
@@ -56,22 +55,31 @@ export const AnimatedText = ({
   );
 };
 
+// The background blends from the previous scene's color, so light and dark
+// scenes never swap in a single frame. Content fades out before the cut.
 export const SceneTransition = ({
   children,
   duration,
   dark = false,
+  from,
 }: {
   children: React.ReactNode;
   duration: number;
   dark?: boolean;
+  from?: string;
 }) => {
   const frame = useCurrentFrame();
+  const target = dark ? theme.ink : theme.paper;
   return (
     <div
       style={{
         position: "absolute",
         inset: 0,
-        backgroundColor: dark ? theme.ink : theme.paper,
+        backgroundColor: interpolateColors(
+          frame,
+          [0, 18],
+          [from ?? target, target],
+        ),
         color: dark ? "#fff" : theme.ink,
         fontFamily: theme.font,
       }}
@@ -82,7 +90,7 @@ export const SceneTransition = ({
           inset: 0,
           opacity: interpolate(
             frame,
-            [0, 14, duration - 15, duration - 1],
+            [0, 12, duration - 12, duration - 1],
             [0, 1, 1, 0],
             { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
           ),
@@ -91,6 +99,26 @@ export const SceneTransition = ({
         {children}
       </div>
     </div>
+  );
+};
+
+// Fades its content out just before the enclosing Sequence ends.
+export const FadeOut = ({ children }: { children: React.ReactNode }) => {
+  const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  return (
+    <AbsoluteFill
+      style={{
+        opacity: interpolate(
+          frame,
+          [durationInFrames - 12, durationInFrames - 1],
+          [1, 0],
+          { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+        ),
+      }}
+    >
+      {children}
+    </AbsoluteFill>
   );
 };
 
@@ -108,176 +136,6 @@ export const LogoReveal = ({ size = 120 }: { size?: number }) => {
           extrapolateRight: "clamp",
         }),
         scale: 0.94 + 0.06 * spring({ frame, fps, config: { damping: 200 } }),
-      }}
-    />
-  );
-};
-
-export const BrowserFrame = ({
-  capture,
-  label,
-  zoom = 1,
-  focus = "center",
-  tilt = false,
-  spotlight,
-}: {
-  capture: string;
-  label: string;
-  zoom?: number;
-  focus?: string;
-  tilt?: boolean;
-  spotlight?: { x: number; y: number; width: number; height: number };
-}) => {
-  const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
-  const asset = captures[capture]?.reviewed ? captures[capture] : undefined;
-  return (
-    <div
-      style={{
-        width: 1440,
-        height: 810 + 46,
-        borderRadius: 18,
-        backgroundColor: "#fff",
-        overflow: "hidden",
-        boxShadow: "0 36px 80px #00000026",
-        border: "1px solid #80808030",
-        transform: tilt
-          ? `perspective(2600px) rotateY(${interpolate(frame, [0, 50], [-7, 0], { extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) })}deg)`
-          : undefined,
-        scale: interpolate(frame, [0, 42], [0.96, 1], {
-          extrapolateRight: "clamp",
-          easing: Easing.bezier(0.16, 1, 0.3, 1),
-        }),
-        translate: `${interpolate(frame, [0, 42], [tilt ? 70 : -45, 0], { extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) })}px ${interpolate(frame, [0, 42], [50, 0], { extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) })}px`,
-      }}
-    >
-      <div
-        style={{
-          height: 46,
-          backgroundColor: "#eceef1",
-          display: "flex",
-          alignItems: "center",
-          padding: "0 20px",
-          gap: 9,
-          color: "#58616d",
-          fontSize: 16,
-        }}
-      >
-        <span
-          style={{
-            width: 10,
-            height: 10,
-            borderRadius: "50%",
-            backgroundColor: "#b8bec7",
-          }}
-        />
-        <span
-          style={{
-            width: 10,
-            height: 10,
-            borderRadius: "50%",
-            backgroundColor: "#b8bec7",
-          }}
-        />
-        <span
-          style={{
-            width: 10,
-            height: 10,
-            borderRadius: "50%",
-            backgroundColor: "#b8bec7",
-          }}
-        />
-        <span style={{ margin: "auto" }}>DTC EMS / {label}</span>
-        <span style={{ width: 30 }} />
-      </div>
-      <div
-        style={{
-          position: "relative",
-          height: 810,
-          overflow: "hidden",
-          color: theme.ink,
-        }}
-      >
-        {asset ? (
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              transformOrigin: focus,
-              scale: interpolate(frame, [0, durationInFrames], [1, zoom], {
-                extrapolateRight: "clamp",
-              }),
-            }}
-          >
-            <CanvasImage
-              src={staticFile(asset.file)}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-            {spotlight && (
-              <Sequence
-                from={60}
-                durationInFrames={120}
-                name="Review detail spotlight"
-              >
-                <FeatureSpotlight {...spotlight} />
-              </Sequence>
-            )}
-          </div>
-        ) : (
-          <AbsoluteFill
-            style={{
-              backgroundColor: "#eef1f6",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 25,
-            }}
-          >
-            <div
-              style={{ width: 70, height: 4, backgroundColor: theme.blue }}
-            />
-            <div style={{ fontSize: 46, fontWeight: 600 }}>{label}</div>
-            <div style={{ fontSize: 28, color: "#5c6675" }}>
-              Capture pending · authenticated demo access required
-            </div>
-            <div style={{ fontSize: 23, color: "#5c6675" }}>
-              Temporary placeholder — not a system interface
-            </div>
-          </AbsoluteFill>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export const FeatureSpotlight = ({
-  x,
-  y,
-  width,
-  height,
-}: {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}) => {
-  const frame = useCurrentFrame();
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: x,
-        top: y,
-        width,
-        height,
-        border: `3px solid ${theme.blue}`,
-        borderRadius: 12,
-        boxShadow: "0 0 0 2000px #00000030",
-        opacity: interpolate(frame, [0, 18, 100, 120], [0, 1, 1, 0], {
-          extrapolateLeft: "clamp",
-          extrapolateRight: "clamp",
-        }),
       }}
     />
   );
@@ -332,48 +190,59 @@ export const Cursor = ({
   );
 };
 
-export const Workflow = ({ steps }: { steps: string[] }) => {
-  const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
-  const active = Math.min(
-    steps.length - 1,
-    Math.floor((frame / durationInFrames) * steps.length),
-  );
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-      {steps.map((step, i) => (
-        <React.Fragment key={step}>
-          {i > 0 && (
-            <div style={{ width: 32, height: 1, backgroundColor: "#8290a4" }} />
-          )}
+// The highlight follows the shot on screen, not an independent clock.
+export const Workflow = ({
+  steps,
+  active,
+  since,
+}: {
+  steps: string[];
+  active: number;
+  since: number;
+}) => (
+  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+    {steps.map((step, i) => (
+      <React.Fragment key={step}>
+        {i > 0 && (
+          <div style={{ width: 20, height: 1, backgroundColor: "#aab4c4" }} />
+        )}
+        <div
+          style={{
+            fontSize: 22,
+            fontWeight: i === active ? 700 : 400,
+            position: "relative",
+            color: i <= active ? theme.ink : "#6b7586",
+            paddingBottom: 9,
+          }}
+        >
+          {step}
           <div
             style={{
-              fontSize: 27,
-              position: "relative",
-              color: i <= active ? "inherit" : "#87909e",
-              borderBottom: "3px solid transparent",
-              paddingBottom: 12,
+              position: "absolute",
+              left: 0,
+              bottom: 0,
+              height: 3,
+              width: "100%",
+              backgroundColor: i === active ? theme.blue : "#9db4ee",
+              transformOrigin: "left",
+              scale: `${
+                i < active
+                  ? 1
+                  : i > active
+                    ? 0
+                    : interpolate(since, [0, 22], [0, 1], {
+                        extrapolateLeft: "clamp",
+                        extrapolateRight: "clamp",
+                        easing: Easing.bezier(0.16, 1, 0.3, 1),
+                      })
+              } 1`,
             }}
-          >
-            {step}
-            <div
-              style={{
-                position: "absolute",
-                left: 0,
-                bottom: -3,
-                height: 3,
-                width: "100%",
-                backgroundColor: theme.blue,
-                transformOrigin: "left",
-                scale: `${interpolate(frame - (i * durationInFrames) / steps.length, [0, 24], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) })} 1`,
-              }}
-            />
-          </div>
-        </React.Fragment>
-      ))}
-    </div>
-  );
-};
+          />
+        </div>
+      </React.Fragment>
+    ))}
+  </div>
+);
 
 // Use with a clipped, reviewed capture; distance must stay inside its image bounds.
 export const ScrollSimulation = ({

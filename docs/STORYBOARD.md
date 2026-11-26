@@ -30,7 +30,7 @@ Application: `C:/Users/JEREMY/centralized_enrollment_for_DTC`, available at `htt
 
 ## Motion and editing
 
-Frame-driven eased text reveals, staggered closing lines, damped browser entrance, perspective flattening, screenshot zoom, workflow emphasis and connecting lines. Cursor/click and spotlight components are available for precisely located reviewed actions; they are not placed over unknown interfaces.
+Screens crossfade inside one persistent window, then ease toward a focus point; step highlights follow the shot. Frame-driven eased text reveals, staggered closing lines, damped window entrance, screenshot focus zoom, workflow emphasis and connecting lines. Cursor/click and spotlight components are available for precisely located reviewed actions; they are not placed over unknown interfaces.
 
 Scene instances are authored individually in `src/DTCEMSDemo.tsx`. Shared shot presentation is intentionally template-driven in `FeatureScene.tsx`; edit shot order/content in its scene file. Central timings are in `src/config/timeline.ts`. Changing total duration scales chapter boundaries; narration requires retiming separately.
 

@@ -1,115 +1,195 @@
 {
   "provenance": "Original procedural synthesis; no third-party samples",
   "duration": 210,
-  "peak": 0.34252119064331055,
+  "peak": 0.5,
   "cues": [
     {
-      "time": 0.08,
+      "time": 0.1,
       "type": "chime"
     },
     {
-      "time": 12.08,
-      "type": "whoosh"
+      "time": 2,
+      "type": "swoosh"
     },
     {
-      "time": 18,
-      "type": "whoosh"
+      "time": 12.03,
+      "type": "swoosh"
     },
     {
-      "time": 24,
-      "type": "whoosh"
+      "time": 18.03,
+      "type": "slide"
     },
     {
-      "time": 30.08,
-      "type": "whoosh"
+      "time": 18.32,
+      "type": "tick"
     },
     {
-      "time": 38.766666666666666,
-      "type": "whoosh"
+      "time": 24.03,
+      "type": "slide"
     },
     {
-      "time": 47.5,
-      "type": "whoosh"
+      "time": 24.32,
+      "type": "tick"
     },
     {
-      "time": 56.266666666666666,
-      "type": "whoosh"
+      "time": 30.03,
+      "type": "swoosh"
     },
     {
-      "time": 65.08,
-      "type": "whoosh"
+      "time": 38.797,
+      "type": "slide"
     },
     {
-      "time": 72.5,
-      "type": "whoosh"
+      "time": 39.087,
+      "type": "tick"
     },
     {
-      "time": 80,
-      "type": "whoosh"
+      "time": 47.53,
+      "type": "slide"
     },
     {
-      "time": 87.5,
-      "type": "whoosh"
+      "time": 47.82,
+      "type": "tick"
     },
     {
-      "time": 95.08,
-      "type": "whoosh"
+      "time": 56.297,
+      "type": "slide"
     },
     {
-      "time": 102.5,
-      "type": "whoosh"
+      "time": 56.587,
+      "type": "tick"
     },
     {
-      "time": 110,
-      "type": "whoosh"
+      "time": 65.03,
+      "type": "swoosh"
     },
     {
-      "time": 117.5,
-      "type": "whoosh"
+      "time": 72.53,
+      "type": "slide"
     },
     {
-      "time": 125.08,
-      "type": "whoosh"
+      "time": 80.03,
+      "type": "slide"
     },
     {
-      "time": 132,
-      "type": "whoosh"
+      "time": 80.32,
+      "type": "tick"
     },
     {
-      "time": 139,
-      "type": "whoosh"
+      "time": 83,
+      "type": "focus"
     },
     {
-      "time": 146,
-      "type": "whoosh"
+      "time": 87.53,
+      "type": "slide"
     },
     {
-      "time": 153,
-      "type": "whoosh"
+      "time": 87.82,
+      "type": "tick"
     },
     {
-      "time": 160.08,
-      "type": "whoosh"
+      "time": 88.1,
+      "type": "success"
     },
     {
-      "time": 185.08,
-      "type": "chime"
+      "time": 95.03,
+      "type": "swoosh"
     },
     {
-      "time": 4,
-      "type": "whoosh"
+      "time": 102.53,
+      "type": "slide"
+    },
+    {
+      "time": 110.03,
+      "type": "slide"
+    },
+    {
+      "time": 110.32,
+      "type": "tick"
+    },
+    {
+      "time": 117.53,
+      "type": "slide"
+    },
+    {
+      "time": 117.82,
+      "type": "tick"
+    },
+    {
+      "time": 118.1,
+      "type": "success"
+    },
+    {
+      "time": 125.03,
+      "type": "swoosh"
+    },
+    {
+      "time": 132.03,
+      "type": "slide"
+    },
+    {
+      "time": 132.32,
+      "type": "tick"
+    },
+    {
+      "time": 139.03,
+      "type": "slide"
+    },
+    {
+      "time": 139.32,
+      "type": "tick"
+    },
+    {
+      "time": 146.03,
+      "type": "slide"
+    },
+    {
+      "time": 153.03,
+      "type": "slide"
+    },
+    {
+      "time": 153.32,
+      "type": "tick"
+    },
+    {
+      "time": 160.03,
+      "type": "swoosh"
     },
     {
       "time": 170,
-      "type": "chime"
+      "type": "slide"
     },
     {
-      "time": 187,
-      "type": "chime"
+      "time": 170.867,
+      "type": "pop"
     },
     {
-      "time": 189,
-      "type": "chime"
+      "time": 171.733,
+      "type": "pop"
+    },
+    {
+      "time": 172.6,
+      "type": "pop"
+    },
+    {
+      "time": 173.467,
+      "type": "pop"
+    },
+    {
+      "time": 174.333,
+      "type": "pop"
+    },
+    {
+      "time": 185.15,
+      "type": "accent"
+    },
+    {
+      "time": 187.15,
+      "type": "accent"
+    },
+    {
+      "time": 189.15,
+      "type": "accent"
     },
     {
       "time": 196,

@@ -6,9 +6,11 @@ import {
 } from "remotion";
 import {
   AnimatedText,
-  BrowserFrame,
+  FadeOut,
   SceneTransition,
 } from "../components/Motion";
+import { ProductWindow, Screen } from "../components/ProductWindow";
+import { theme } from "../config/theme";
 export const Administration = () => {
   const { fps, durationInFrames } = useVideoConfig();
   return (
@@ -17,21 +19,25 @@ export const Administration = () => {
         <AnimatedText size={88}>Everything works together.</AnimatedText>
       </div>
       <Sequence durationInFrames={10 * fps} name="Administrator dashboard">
-        <div
-          style={{
-            position: "absolute",
-            left: 384,
-            top: 220,
-            scale: ".80",
-            transformOrigin: "top left",
-          }}
-        >
-          <BrowserFrame
-            capture="admin-dashboard"
-            label="Administrator dashboard"
-            zoom={1.06}
-          />
-        </div>
+        <FadeOut>
+          <div
+            style={{
+              position: "absolute",
+              left: 371,
+              top: 220,
+              scale: ".80",
+              transformOrigin: "top left",
+            }}
+          >
+            <ProductWindow label="Administrator dashboard">
+              <Screen
+                capture="admin-dashboard"
+                label="Administrator dashboard"
+                focus={{ x: 0.6, y: 0.25, zoom: 1.14 }}
+              />
+            </ProductWindow>
+          </div>
+        </FadeOut>
       </Sequence>
       <Sequence from={10 * fps} name="Connected institutional roles">
         <RoleNetwork />
@@ -44,6 +50,8 @@ export const Administration = () => {
     </SceneTransition>
   );
 };
+// Frames between roles, so each connection can be read as it arrives.
+const STAGGER = 26;
 const RoleNetwork = () => {
   const frame = useCurrentFrame();
   const roles = [
@@ -73,12 +81,28 @@ const RoleNetwork = () => {
             strokeWidth="2"
             pathLength="1"
             strokeDasharray="1"
-            strokeDashoffset={interpolate(frame - i * 8, [0, 45], [1, 0], {
+            strokeDashoffset={interpolate(frame - i * STAGGER, [0, 36], [1, 0], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             })}
           />
         ))}
+        {roles.map((role, i) => {
+          const t = interpolate(frame - 190 - i * 18, [0, 40], [0, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          });
+          return (
+            <circle
+              key={`pulse-${role.name}`}
+              cx={role.x + 120 + (960 - role.x - 120) * t}
+              cy={role.y + 30 + (550 - role.y - 30) * t}
+              r="9"
+              fill={theme.gold}
+              opacity={t > 0 && t < 1 ? 1 : 0}
+            />
+          );
+        })}
       </svg>
       <div
         style={{
@@ -107,9 +131,11 @@ const RoleNetwork = () => {
             width: 240,
             textAlign: "center",
             padding: "22px 0",
-            backgroundColor: "#F5F7FA",
+            backgroundColor: "#fff",
+            borderRadius: 14,
+            boxShadow: "0 2px 6px #0b122014, 0 14px 34px #0b12201f",
             fontSize: 32,
-            opacity: interpolate(frame - i * 8, [0, 24], [0, 1], {
+            opacity: interpolate(frame - 26 - i * STAGGER, [0, 20], [0, 1], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),

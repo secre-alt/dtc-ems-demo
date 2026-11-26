@@ -55,8 +55,10 @@ for (const id of expected) {
   );
   const png = await readFile(`public/${capture.file}`);
   assert.equal(png.toString("hex", 0, 8), "89504e470d0a1a0a");
-  assert.equal(png.readUInt32BE(16), 1920, `${id}: incorrect width`);
-  assert.equal(png.readUInt32BE(20), 1080, `${id}: incorrect height`);
+  const size = `${png.readUInt32BE(16)}x${png.readUInt32BE(20)}`;
+  assert(["3840x2160", "1920x1080"].includes(size), `${id}: bad size ${size}`);
+  if (size === "1920x1080")
+    console.warn(`${id}: 1x capture; recapture for sharper zooms.`);
 }
 assert(
   existsSync("public/assets/branding/DTC-LOGO.png"),

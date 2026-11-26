@@ -73,7 +73,7 @@ try {
     }
     const context = await browser.newContext({
       viewport: { width: 1920, height: 1080 },
-      deviceScaleFactor: 1,
+      deviceScaleFactor: 2,
       locale: "en-US",
       timezoneId: "Asia/Manila",
       reducedMotion: "reduce",

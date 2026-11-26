@@ -1,0 +1,287 @@
+{
+  "overview": {
+    "chapter": "The platform",
+    "title": "One system. Connected services.",
+    "steps": [
+      "Enrollment",
+      "Payments",
+      "Document Services"
+    ],
+    "shots": [
+      {
+        "capture": "application",
+        "label": "Online pre-enrollment",
+        "caption": "A connected beginning.",
+        "step": 0,
+        "focus": {
+          "x": 0.5,
+          "y": 0.3,
+          "zoom": 1.14
+        }
+      },
+      {
+        "capture": "student-dashboard",
+        "label": "Student dashboard",
+        "caption": "Your next step, in view.",
+        "step": 1,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      },
+      {
+        "capture": "document-form",
+        "label": "Document services",
+        "caption": "Support beyond enrollment.",
+        "step": 2,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      }
+    ]
+  },
+  "student": {
+    "chapter": "Applicant & student",
+    "title": "Enrollment, simplified.",
+    "steps": [
+      "Apply",
+      "Review",
+      "Select subjects",
+      "Track"
+    ],
+    "shots": [
+      {
+        "capture": "application",
+        "label": "Online application",
+        "caption": "Apply online.",
+        "step": 0,
+        "focus": {
+          "x": 0.5,
+          "y": 0.3,
+          "zoom": 1.2
+        }
+      },
+      {
+        "capture": "application-status",
+        "label": "Application status",
+        "caption": "Follow your application.",
+        "step": 1,
+        "focus": {
+          "x": 0.5,
+          "y": 0.35,
+          "zoom": 1.2
+        }
+      },
+      {
+        "capture": "enrollment-create",
+        "label": "Subject selection",
+        "caption": "Select subjects. Submit enrollment.",
+        "step": 2,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      },
+      {
+        "capture": "enrollment-status",
+        "label": "Enrollment progress",
+        "caption": "Track sections, payment, and final approval.",
+        "step": 3,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      }
+    ]
+  },
+  "registrar": {
+    "chapter": "Registrar workspace",
+    "title": "Built for better administration.",
+    "steps": [
+      "Review",
+      "Verify",
+      "Approve"
+    ],
+    "shots": [
+      {
+        "capture": "registrar-dashboard",
+        "label": "Registrar dashboard",
+        "caption": "See the work ahead.",
+        "step": 0,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      },
+      {
+        "capture": "applications",
+        "label": "Application management",
+        "caption": "Find submissions. Review the details.",
+        "step": 0,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      },
+      {
+        "capture": "enrollment-review",
+        "label": "Enrollment review",
+        "caption": "Check subjects and payment readiness.",
+        "step": 1,
+        "focus": {
+          "x": 0.564,
+          "y": 0.408,
+          "zoom": 1.25
+        },
+        "spotlight": {
+          "x": 0.3785,
+          "y": 0.368,
+          "width": 0.3715,
+          "height": 0.0802
+        }
+      },
+      {
+        "capture": "enrollment-approval",
+        "label": "Approved enrollment record",
+        "caption": "Payment verified. Academic decision recorded.",
+        "step": 2,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        },
+        "sound": "success"
+      }
+    ]
+  },
+  "payments": {
+    "chapter": "Student & cashier",
+    "title": "Payments, connected.",
+    "steps": [
+      "Submit",
+      "Verify",
+      "Confirm"
+    ],
+    "shots": [
+      {
+        "capture": "student-payment",
+        "label": "Student payment details",
+        "caption": "View enrollment payment details.",
+        "step": 0,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      },
+      {
+        "capture": "gcash-submit",
+        "label": "GCash document payment",
+        "caption": "Add a reference and payment proof.",
+        "step": 0,
+        "focus": {
+          "x": 0.5,
+          "y": 1,
+          "zoom": 1.32
+        }
+      },
+      {
+        "capture": "cashier-payments",
+        "label": "Cashier payment processing",
+        "caption": "Review GCash proof. Process walk-in payments.",
+        "step": 1,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      },
+      {
+        "capture": "payment-confirmation",
+        "label": "Verified payment and receipt",
+        "caption": "Verified status. Recorded receipt.",
+        "step": 2,
+        "focus": {
+          "x": 0.5,
+          "y": 0.3,
+          "zoom": 1.18
+        },
+        "sound": "success"
+      }
+    ]
+  },
+  "documents": {
+    "chapter": "Student & alumni services",
+    "title": "Document services. Made accessible.",
+    "steps": [
+      "Request",
+      "Payment",
+      "Preparation",
+      "Collection"
+    ],
+    "shots": [
+      {
+        "capture": "alumni-dashboard",
+        "label": "Alumni dashboard",
+        "caption": "Essential services, still connected.",
+        "step": 0,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      },
+      {
+        "capture": "document-form",
+        "label": "Document request form",
+        "caption": "Choose documents. Arrange payment.",
+        "step": 1,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      },
+      {
+        "capture": "document-status",
+        "label": "Document request progress",
+        "caption": "Stay informed as requests progress.",
+        "step": 2,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      },
+      {
+        "capture": "registrar-documents",
+        "label": "Registrar document management",
+        "caption": "Preparation, readiness, and physical release.",
+        "step": 2,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      },
+      {
+        "capture": "document-status",
+        "label": "Collection information",
+        "caption": "Collect ready, payment-satisfied documents during office hours.",
+        "step": 3,
+        "focus": {
+          "x": 0.6,
+          "y": 0.25,
+          "zoom": 1.18
+        }
+      }
+    ]
+  }
+}

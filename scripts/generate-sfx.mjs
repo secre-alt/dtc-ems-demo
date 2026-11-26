@@ -2,85 +2,152 @@ import assert from "node:assert/strict";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 // Original synthesized effects: no third-party recordings or samples.
-const timelineSource = readFileSync("src/config/timeline.ts", "utf8");
-const scenes = [
-  ...timelineSource.matchAll(/(\w+): \{ start: (\d+), seconds: (\d+) \}/g),
-].map(([, name, start, seconds]) => ({
-  name,
-  start: Number(start),
-  seconds: Number(seconds),
-}));
-const duration = Number(
-  timelineSource.match(/height: 1080, seconds: (\d+)/)?.[1],
-);
-assert.equal(scenes.length, 8);
-assert.equal(
-  duration,
-  210,
-  "Regenerate cue timing when changing film duration",
-);
+// Cue times come from the same JSON files that drive the picture.
+const read = (name) =>
+  JSON.parse(readFileSync(`src/config/${name}.json`, "utf8"));
+const { fps, seconds: duration, scenes } = read("timeline");
+const shotData = read("shots");
+
 const rate = 24000;
-const samples = new Float32Array(rate * duration * 2);
+const length = rate * duration;
+const left = new Float32Array(length);
+const right = new Float32Array(length);
 const cues = [];
 let seed = 42;
 const noise = () =>
   ((seed = (1664525 * seed + 1013904223) >>> 0) / 4294967296) * 2 - 1;
-function cue(time, type, pan = 0) {
-  const length = type === "chime" ? 1.5 : 0.65;
-  assert(time >= 0 && time + length <= duration);
-  cues.push({ time, type });
-  let filtered = 0;
-  for (let i = 0; i < length * rate; i++) {
-    const t = i / rate;
-    const attack = Math.min(1, t / 0.018);
-    filtered = 0.82 * filtered + 0.18 * noise();
-    const value =
-      type === "chime"
-        ? attack *
-          Math.exp(-4.2 * t) *
-          (Math.sin(2 * Math.PI * 660 * t) +
-            0.4 * Math.sin(2 * Math.PI * 990 * t)) *
-          0.19
-        : Math.sin((Math.PI * t) / length) ** 2 *
-          (filtered * 0.65 +
-            Math.sin(2 * Math.PI * (110 * t + 70 * t * t)) * 0.035);
-    const index = (Math.round(time * rate) + i) * 2;
-    samples[index] += value * Math.sqrt((1 - pan) / 2);
-    samples[index + 1] += value * Math.sqrt((1 + pan) / 2);
+const sine = (hz, t) => Math.sin(2 * Math.PI * hz * t);
+const decay = (t, speed, attack = 0.006) =>
+  Math.min(1, t / attack) * Math.exp(-speed * t);
+
+// Air movement: noise through a resonant band-pass whose pitch glides.
+const air = (size, low, high) => {
+  let lp = 0;
+  let band = 0;
+  return (t) => {
+    const arc = Math.sin((Math.PI * t) / size);
+    const f = 2 * Math.sin((Math.PI * (low + (high - low) * arc)) / rate);
+    lp += f * band;
+    const hp = noise() - lp - 0.9 * band;
+    band += f * hp;
+    return band * arc ** 2;
+  };
+};
+const note = (t, hz, speed) =>
+  t < 0
+    ? 0
+    : decay(t, speed) * (sine(hz, t) + 0.25 * sine(hz * 2.001, t) * decay(t, 4));
+
+const sounds = {
+  // Scene change
+  swoosh: { size: 0.7, gain: 0.3, make: () => air(0.7, 260, 2300) },
+  // Screen change inside a scene
+  slide: { size: 0.34, gain: 0.13, make: () => air(0.34, 700, 2600) },
+  // The step indicator advances
+  tick: { size: 0.16, gain: 0.07, make: () => (t) => note(t, 1318.5, 38) },
+  // The spotlight settles
+  focus: {
+    size: 0.7,
+    gain: 0.09,
+    make: () => (t) => note(t, 587.33, 7) + note(t - 0.11, 880, 7),
+  },
+  // A saved verified or approved record appears
+  success: {
+    size: 1.1,
+    gain: 0.13,
+    make: () => (t) => note(t, 659.25, 6) + note(t - 0.13, 987.77, 4.5),
+  },
+  // A role joins the diagram; pitch rises with each one
+  pop: { size: 0.3, gain: 0.1, make: (hz) => (t) => note(t, hz, 18) },
+  // Soft mark under each closing statement
+  accent: { size: 1.2, gain: 0.1, make: (hz) => (t) => note(t, hz, 3.8) },
+  // Logo reveals: an A major chord, notes slightly rolled
+  chime: {
+    size: 2.4,
+    gain: 0.1,
+    make: () => (t) =>
+      [440, 554.37, 659.25, 880].reduce(
+        (sum, hz, i) => sum + note(t - i * 0.055, hz, 2.3),
+        0,
+      ),
+  },
+};
+
+function cue(time, type, { pan = 0, hz } = {}) {
+  const { size, gain, make } = sounds[type];
+  assert(time >= 0 && time + size <= duration, `${type} out of range: ${time}`);
+  cues.push({ time: Math.round(time * 1000) / 1000, type });
+  const sample = make(hz);
+  const first = Math.round(time * rate);
+  for (let i = 0; i < size * rate; i++) {
+    // Fade the last 30 ms so no cue ends with a click.
+    const fade = Math.min(1, (size - i / rate) / 0.03);
+    const value = sample(i / rate) * gain * fade;
+    left[first + i] += value * Math.sqrt((1 - pan) / 2);
+    right[first + i] += value * Math.sqrt((1 + pan) / 2);
   }
 }
-const shotCounts = {
-  overview: 3,
-  student: 4,
-  registrar: 4,
-  payments: 4,
-  documents: 5,
-};
-for (const scene of scenes) {
-  cue(
-    scene.start + 0.08,
-    scene.name === "intro" || scene.name === "closing" ? "chime" : "whoosh",
-  );
-  const count = shotCounts[scene.name];
-  for (let i = 1; i < count; i++)
-    cue(
-      scene.start + Math.round(((i * scene.seconds) / count) * 30) / 30,
-      "whoosh",
-      i % 2 ? -0.25 : 0.25,
-    );
+
+// Opening: logo, then the landing window.
+cue(0.1, "chime");
+cue(2, "swoosh", { pan: 0.25 });
+
+for (const [name, data] of Object.entries(shotData)) {
+  const scene = scenes[name];
+  const frames = Math.round(scene.seconds * fps);
+  data.shots.forEach((shot, i) => {
+    // Same rounding as FeatureScene.tsx.
+    const at = scene.start + Math.round((i * frames) / data.shots.length) / fps;
+    cue(at + 0.03, i === 0 ? "swoosh" : "slide", { pan: i % 2 ? -0.2 : 0.2 });
+    if (i > 0 && shot.step !== data.shots[i - 1].step)
+      cue(at + 0.32, "tick", { pan: 0.3 });
+    // Spotlight starts at frame 90 of its shot.
+    if (shot.spotlight) cue(at + 90 / fps, "focus");
+    if (shot.sound) cue(at + 0.6, shot.sound);
+  });
 }
-cue(4, "whoosh", 0.25);
-cue(170, "chime");
-cue(187, "chime");
-cue(189, "chime");
-cue(196, "chime");
+
+// Administration: dashboard, then roles at the frames used by RoleNetwork.
+const admin = scenes.administration.start;
+cue(admin + 0.03, "swoosh");
+cue(admin + 10, "slide");
+[523.25, 587.33, 659.25, 783.99, 880].forEach((hz, i) =>
+  cue(admin + 10 + (26 + i * 26) / fps, "pop", {
+    pan: [-0.4, 0.4, 0.4, -0.4, 0][i],
+    hz,
+  }),
+);
+
+// Closing: three statements, then the sign-off.
+const closing = scenes.closing.start;
+[440, 554.37, 659.25].forEach((hz, i) =>
+  cue(closing + i * 2 + 0.15, "accent", { hz }),
+);
+cue(closing + 11, "chime");
+
+// A light room reflection, so tones do not sound dry.
+for (const channel of [left, right]) {
+  const dry = channel.slice();
+  const spread = channel === left ? 1 : 1.13;
+  for (const [ms, gain] of [
+    [47, 0.16],
+    [83, 0.11],
+    [131, 0.07],
+  ]) {
+    const offset = Math.round((ms * spread * rate) / 1000);
+    for (let i = offset; i < length; i++)
+      channel[i] += dry[i - offset] * gain;
+  }
+}
+
 let peak = 0;
-for (const sample of samples) {
-  assert(Number.isFinite(sample));
-  peak = Math.max(peak, Math.abs(sample));
-}
-assert(peak > 0.05 && peak < 0.8, `Invalid audio peak ${peak}`);
-const pcm = Buffer.alloc(44 + samples.length * 2);
+for (let i = 0; i < length; i++)
+  peak = Math.max(peak, Math.abs(left[i]), Math.abs(right[i]));
+assert(Number.isFinite(peak) && peak > 0.01, "Silent or invalid audio");
+// Normalize the stem to -6 dBFS to leave headroom for voice and music.
+const level = 0.5 / peak;
+
+const pcm = Buffer.alloc(44 + length * 4);
 pcm.write("RIFF", 0);
 pcm.writeUInt32LE(pcm.length - 8, 4);
 pcm.write("WAVEfmt ", 8);
@@ -92,10 +159,12 @@ pcm.writeUInt32LE(rate * 4, 28);
 pcm.writeUInt16LE(4, 32);
 pcm.writeUInt16LE(16, 34);
 pcm.write("data", 36);
-pcm.writeUInt32LE(samples.length * 2, 40);
-samples.forEach((value, i) =>
-  pcm.writeInt16LE(Math.round(value * 32767), 44 + i * 2),
-);
+pcm.writeUInt32LE(length * 4, 40);
+for (let i = 0; i < length; i++) {
+  pcm.writeInt16LE(Math.round(left[i] * level * 32767), 44 + i * 4);
+  pcm.writeInt16LE(Math.round(right[i] * level * 32767), 46 + i * 4);
+}
+cues.sort((a, b) => a.time - b.time);
 mkdirSync("public/assets/audio", { recursive: true });
 writeFileSync("public/assets/audio/sound-design.wav", pcm);
 writeFileSync(
@@ -104,13 +173,11 @@ writeFileSync(
     {
       provenance: "Original procedural synthesis; no third-party samples",
       duration,
-      peak,
+      peak: 0.5,
       cues,
     },
     null,
     2,
-  ),
+  ) + "\n",
 );
-console.log(
-  `Generated ${cues.length} stereo cues; peak ${peak.toFixed(3)}; ${duration}s`,
-);
+console.log(`Generated ${cues.length} stereo cues; peak 0.5; ${duration}s`);
