@@ -15,8 +15,8 @@
         "step": 0,
         "focus": {
           "x": 0.5,
-          "y": 0.3,
-          "zoom": 1.14
+          "y": 0.36,
+          "zoom": 1.4
         }
       },
       {
@@ -60,8 +60,8 @@
         "step": 0,
         "focus": {
           "x": 0.5,
-          "y": 0.3,
-          "zoom": 1.2
+          "y": 0.36,
+          "zoom": 1.4
         }
       },
       {
@@ -71,8 +71,8 @@
         "step": 1,
         "focus": {
           "x": 0.5,
-          "y": 0.35,
-          "zoom": 1.2
+          "y": 0.4,
+          "zoom": 1.35
         }
       },
       {
@@ -81,9 +81,9 @@
         "caption": "Select subjects. Submit enrollment.",
         "step": 2,
         "focus": {
-          "x": 0.6,
-          "y": 0.25,
-          "zoom": 1.18
+          "x": 0.44,
+          "y": 0.84,
+          "zoom": 1.5
         }
       },
       {
@@ -133,18 +133,12 @@
       {
         "capture": "enrollment-review",
         "label": "Enrollment review",
-        "caption": "Check subjects and payment readiness.",
+        "caption": "Review the student's selected subjects.",
         "step": 1,
         "focus": {
-          "x": 0.564,
-          "y": 0.408,
-          "zoom": 1.25
-        },
-        "spotlight": {
-          "x": 0.3785,
-          "y": 0.368,
-          "width": 0.3715,
-          "height": 0.0802
+          "x": 0.565,
+          "y": 0.51,
+          "zoom": 1.18
         }
       },
       {
@@ -187,9 +181,9 @@
         "caption": "Add a reference and payment proof.",
         "step": 0,
         "focus": {
-          "x": 0.5,
-          "y": 1,
-          "zoom": 1.32
+          "x": 0.45,
+          "y": 0.94,
+          "zoom": 1.5
         }
       },
       {
@@ -210,8 +204,8 @@
         "step": 2,
         "focus": {
           "x": 0.5,
-          "y": 0.3,
-          "zoom": 1.18
+          "y": 0.5,
+          "zoom": 1.22
         },
         "sound": "success"
       }
@@ -274,7 +268,7 @@
       {
         "capture": "document-status",
         "label": "Collection information",
-        "caption": "Collect ready, payment-satisfied documents during office hours.",
+        "caption": "Collect ready documents during office hours.",
         "step": 3,
         "focus": {
           "x": 0.6,

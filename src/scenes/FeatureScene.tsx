@@ -33,7 +33,7 @@ export const FeatureScene = ({
 }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
-  const { chapter, title, steps } = shotData[scene];
+  const { chapter, steps } = shotData[scene];
   const shots: Shot[] = shotData[scene].shots;
   // scripts/generate-sfx.mjs uses the same formula to place its cues.
   const starts = shots.map((_, i) =>
@@ -44,7 +44,6 @@ export const FeatureScene = ({
     <SceneTransition duration={durationInFrames} from={from}>
       <div style={{ position: "absolute", left: 224, top: 34, fontSize: 23 }}>
         <span style={{ color: theme.blue, fontWeight: 700 }}>{chapter}</span>
-        <span style={{ color: "#596477" }}> · {title}</span>
       </div>
       {shots.map((shot, i) => (
         <Sequence

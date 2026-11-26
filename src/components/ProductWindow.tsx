@@ -58,7 +58,7 @@ export const Screen = ({
       </AbsoluteFill>
     );
   }
-  const push = interpolate(frame, [30, 84], [0, 1], {
+  const push = interpolate(frame, [30, 96], [0, 1], {
     ...clamp,
     easing: glide,
   });
@@ -104,7 +104,6 @@ const Spotlight = ({ x, y, width, height }: Box) => {
         top: y * SCREEN.height - settle,
         width: width * SCREEN.width + settle * 2,
         height: height * SCREEN.height + settle * 2,
-        border: `3px solid ${theme.gold}`,
         borderRadius: 12,
         boxShadow: "0 0 0 2000px #0b122055",
         opacity: interpolate(frame, [0, 18, 90, 110], [0, 1, 1, 0], clamp),
