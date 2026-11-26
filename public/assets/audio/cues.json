@@ -1,0 +1,119 @@
+{
+  "provenance": "Original procedural synthesis; no third-party samples",
+  "duration": 210,
+  "peak": 0.34252119064331055,
+  "cues": [
+    {
+      "time": 0.08,
+      "type": "chime"
+    },
+    {
+      "time": 12.08,
+      "type": "whoosh"
+    },
+    {
+      "time": 18,
+      "type": "whoosh"
+    },
+    {
+      "time": 24,
+      "type": "whoosh"
+    },
+    {
+      "time": 30.08,
+      "type": "whoosh"
+    },
+    {
+      "time": 38.766666666666666,
+      "type": "whoosh"
+    },
+    {
+      "time": 47.5,
+      "type": "whoosh"
+    },
+    {
+      "time": 56.266666666666666,
+      "type": "whoosh"
+    },
+    {
+      "time": 65.08,
+      "type": "whoosh"
+    },
+    {
+      "time": 72.5,
+      "type": "whoosh"
+    },
+    {
+      "time": 80,
+      "type": "whoosh"
+    },
+    {
+      "time": 87.5,
+      "type": "whoosh"
+    },
+    {
+      "time": 95.08,
+      "type": "whoosh"
+    },
+    {
+      "time": 102.5,
+      "type": "whoosh"
+    },
+    {
+      "time": 110,
+      "type": "whoosh"
+    },
+    {
+      "time": 117.5,
+      "type": "whoosh"
+    },
+    {
+      "time": 125.08,
+      "type": "whoosh"
+    },
+    {
+      "time": 132,
+      "type": "whoosh"
+    },
+    {
+      "time": 139,
+      "type": "whoosh"
+    },
+    {
+      "time": 146,
+      "type": "whoosh"
+    },
+    {
+      "time": 153,
+      "type": "whoosh"
+    },
+    {
+      "time": 160.08,
+      "type": "whoosh"
+    },
+    {
+      "time": 185.08,
+      "type": "chime"
+    },
+    {
+      "time": 4,
+      "type": "whoosh"
+    },
+    {
+      "time": 170,
+      "type": "chime"
+    },
+    {
+      "time": 187,
+      "type": "chime"
+    },
+    {
+      "time": 189,
+      "type": "chime"
+    },
+    {
+      "time": 196,
+      "type": "chime"
+    }
+  ]
+}

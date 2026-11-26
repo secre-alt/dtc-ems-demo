@@ -1,0 +1,12 @@
+{
+  "baseUrl": "http://127.0.0.1:8000",
+  "syntheticDataOnly": false,
+  "accounts": {
+    "student": { "email": "", "password": "" },
+    "alumni": { "email": "", "password": "" },
+    "registrar": { "email": "", "password": "" },
+    "cashier": { "email": "", "password": "" },
+    "admin": { "email": "", "password": "" }
+  },
+  "extraShots": []
+}

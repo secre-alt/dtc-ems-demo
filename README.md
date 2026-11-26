@@ -1,54 +1,27 @@
-# Remotion video
+﻿# DTC EMS — Official System Demonstration
 
-<p align="center">
-  <a href="https://github.com/remotion-dev/logo">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-dark.apng">
-      <img alt="Animated Remotion Logo" src="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-light.gif">
-    </picture>
-  </a>
-</p>
+Editable Remotion 4.0.547 project for Danao Technological College. Eight scenes, 1920 × 1080, 30 fps, 210 seconds. Uses real reviewed application screenshots; missing captures are explicitly labeled placeholders.
 
-Welcome to your Remotion project!
-
-## Commands
-
-**Install Dependencies**
-
-```console
-npm i --loglevel=error
-```
-
-**Start Preview**
-
-```console
+```text
 npm run dev
+npm run capture -- --public
+npm run capture
+npm run check
+npm run render:draft
+node scripts/validate-assets.mjs --strict
+npm run render
 ```
 
-**Render video**
+On PowerShell systems that block npm.ps1/npx.ps1, use npm.cmd and npx.cmd.
 
-```console
-npx remotion render
-```
+- Composition: DTCEMSDemo at http://localhost:3000/DTCEMSDemo when Studio uses port 3000.
+- Official output: out/dtc-ems-official-demo.mp4, H.264 / yuv420p; AAC when audio is supplied.
+- Draft output while capture coverage is incomplete: out/dtc-ems-review-draft.mp4.
+- Central timing and configurable total duration: src/config/timeline.ts.
+- Independent audio sources and volumes: src/config/assets.ts. Empty sources render silently.
+- Eight scene components: src/scenes/. Reusable motion: src/components/Motion.tsx.
+- Official college seal and blue/gold colors come from the source application. No separate EMS logo was located.
 
-**Upgrade Remotion**
+Read [capture instructions](docs/CAPTURE_GUIDE.md), [verified storyboard](docs/STORYBOARD.md), and [timed narration](docs/NARRATION.md). The Laravel application is a read-only source; this project does not create demo records or bypass authentication.
 
-```console
-npx remotion upgrade
-```
-
-## Docs
-
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
-
-## Help
-
-We provide help on our [Discord server](https://discord.gg/6VzzNDwUwV).
-
-## Issues
-
-Found an issue with Remotion? [File an issue here](https://github.com/remotion-dev/remotion/issues/new).
-
-## License
-
-Note that for some entities a company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+New screenshots are excluded from Git and held behind review flags. Keep capture.local.json private. All 21 capture slots now have reviewed real interfaces from the user-confirmed synthetic dataset. Original synthesized whooshes and chimes accompany browser entrances, chapter changes and logo reveals. Narration and music remain unconfigured. Regenerate effects with `node scripts/generate-sfx.mjs`. See docs/VALIDATION.md for saved-state versus unsubmitted-form details.

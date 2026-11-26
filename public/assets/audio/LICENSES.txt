@@ -1,0 +1,6 @@
+sound-design.wav
+Original procedural synthesis created for this DTC EMS demonstration.
+No third-party recordings, music, or samples are included.
+Reproduce with: node scripts/generate-sfx.mjs
+Cue timing and synthesis provenance: cues.json
+Mix level: audio.effects.volume in src/config/assets.ts
