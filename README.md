@@ -33,3 +33,10 @@ New screenshots are excluded from Git and held behind review flags. Keep capture
 - `src/config/timeline.json`: scene timing. The intro, administration and closing cues have fixed offsets in the scene files and `scripts/generate-sfx.mjs`; change both together.
 - Run `npm run sfx` after changing shots or timing.
 - Captures are taken at 2x (3840 x 2160). Older 1x captures still validate, with a warning.
+
+## Live demo pilot (real interaction recording)
+
+1. Start the local app. In `capture.local.json`, use a synthetic alumni account and `syntheticDataOnly: true`.
+2. `npm run record` records the document request wizard. It never submits, and blocks all writes except login.
+3. Watch `public/assets/recordings/document-request.webm` for private data (ignored by Git).
+4. `npm run dev`, then open the `LiveDemoPilot` composition. The camera follows each click, with click and key sounds.

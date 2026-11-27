@@ -42,7 +42,8 @@
     "render": "node scripts/render.mjs",
     "prerender:draft": "node scripts/ensure-manifest.mjs",
     "render:draft": "node scripts/render.mjs --draft",
-    "sfx": "node scripts/generate-sfx.mjs"
+    "sfx": "node scripts/generate-sfx.mjs",
+    "record": "node scripts/generate-ui-sfx.mjs && node scripts/record.mjs"
   },
   "allowScripts": {
     "esbuild": false

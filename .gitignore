@@ -5,6 +5,7 @@ dist
 capture.local.json
 .capture-sessions/
 public/assets/screenshots/
+public/assets/recordings/
 public/assets/capture-manifest.json
 
 # Ignore the output video from Git but not videos you import into src/.
