@@ -19,8 +19,6 @@ const config = JSON.parse(
 const base = new URL(config.baseUrl);
 if (!["127.0.0.1", "localhost", "[::1]"].includes(base.hostname))
   throw new Error("Recording is restricted to the local application.");
-if (base.port === "8000")
-  throw new Error("Port 8000 is your normal app. Serve the demo copy on 8001.");
 for (const role of ["registrar", "cashier"]) {
   const account = config[role];
   if (
@@ -145,10 +143,22 @@ const signInStaff = async (role, landing) => {
     page.waitForNavigation({ waitUntil: "load" }),
     page.locator('#dtcSignInForm button[type="submit"]').click(),
   ]);
-  if (!landing.test(pathOf(page)))
+  if (!landing.test(pathOf(page))) {
+    const said = await page
+      .locator(".dtc-modal-error:visible, .alert-danger:visible")
+      .allInnerTexts()
+      .catch(() => []);
     throw new Error(
-      `The demo ${role} could not sign in at ${base.origin}. Start the DEMO app (APP_ENV=demo, port 8001) and run the setup script. Nothing was changed.`,
+      [
+        `The demo ${role} could not sign in at ${base.origin}.`,
+        `Page reached: ${pathOf(page)} ("${await page.title()}")`,
+        said.length ? `Page says: ${said.join(" | ").trim()}` : "",
+        'Stop your normal app, then start the DEMO app on this port with $env:APP_ENV="demo". Nothing was changed.',
+      ]
+        .filter(Boolean)
+        .join("\n"),
     );
+  }
   await page.close();
   await page.video().delete();
   return context;

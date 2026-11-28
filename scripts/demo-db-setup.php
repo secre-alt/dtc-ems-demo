@@ -37,7 +37,7 @@ if (! is_file("{$appPath}/.env.demo")) {
     $demoEnv = $mainEnv;
     $overrides = [
         'APP_ENV' => 'demo',
-        'APP_URL' => 'http://127.0.0.1:8001',
+        'APP_URL' => 'http://127.0.0.1:8000',
         'DB_DATABASE' => preg_replace('/_demo$/', '', $mainDatabase).'_demo',
         'DATABASE_URL' => '',
         'DB_URL' => '',
@@ -203,7 +203,7 @@ DB::transaction(function () use (&$accounts, $password) {
 
 $config = [
     'syntheticDataOnly' => true,
-    'baseUrl' => 'http://127.0.0.1:8001',
+    'baseUrl' => 'http://127.0.0.1:8000',
     'mailLog' => str_replace('\\', '/', storage_path('logs/laravel.log')),
     'program' => 'BS Information Systems',
     'applicantPassword' => $password(),

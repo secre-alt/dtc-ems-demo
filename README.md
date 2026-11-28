@@ -60,10 +60,10 @@ This flow creates and approves records, so it runs on a **separate demo database
    ```powershell
    cd C:\Users\JEREMY\centralized_enrollment_for_DTC
    $env:APP_ENV="demo"
-   C:\php84\php.exe artisan serve --port=8001 --no-reload
+   C:\php84\php.exe artisan serve --port=8000 --no-reload
    ```
 
-   Use a window used only for the demo, because `APP_ENV` stays set until you close it. Your normal app can stay on port 8000.
+   Use a window used only for the demo, because `APP_ENV` stays set until you close it. Stop your normal app first (Ctrl+C in its window), because the demo uses the same port.
 
 3. Record, then preview:
 
@@ -76,6 +76,6 @@ This flow creates and approves records, so it runs on a **separate demo database
 
 Before sharing, watch the video. Everything in it should be fictional.
 
-The recorder signs in the generated demo staff accounts first. They exist only in the demo database, so if port 8001 is serving anything else it stops before creating records. The setup assigns plain class sections, so the video shows the Registrar assigning them; if your app publishes a timetable group instead, that step is skipped by the app and the recorder needs adjusting.
+The recorder signs in the generated demo staff accounts first. They exist only in the demo database, so if port 8000 is serving anything else it stops before creating records. The setup assigns plain class sections, so the video shows the Registrar assigning them; if your app publishes a timetable group instead, that step is skipped by the app and the recorder needs adjusting.
 
 If a step fails, the terminal names it and saves `public/assets/recordings/flow/error-<step>.png`.
