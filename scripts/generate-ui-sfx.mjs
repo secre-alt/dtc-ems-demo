@@ -27,12 +27,30 @@ function write(name, seconds, sample) {
   writeFileSync(`public/assets/audio/${name}.wav`, wav);
 }
 mkdirSync("public/assets/audio", { recursive: true });
-write("click", 0.07, (t) =>
-  (noise() * 0.35 * Math.exp(-260 * t) +
-    Math.sin(2 * Math.PI * 1900 * t) * 0.3 * Math.exp(-90 * t)) *
-  Math.min(1, t / 0.001),
+write(
+  "click",
+  0.07,
+  (t) =>
+    (noise() * 0.35 * Math.exp(-260 * t) +
+      Math.sin(2 * Math.PI * 1900 * t) * 0.3 * Math.exp(-90 * t)) *
+    Math.min(1, t / 0.001),
 );
-write("key", 0.045, (t) =>
-  noise() * 0.22 * Math.exp(-150 * t) * Math.min(1, t / 0.001),
+write(
+  "key",
+  0.045,
+  (t) => noise() * 0.22 * Math.exp(-150 * t) * Math.min(1, t / 0.001),
 );
-console.log("Wrote click.wav and key.wav");
+write(
+  "chapter",
+  0.6,
+  (t) =>
+    (Math.sin(2 * Math.PI * 523.25 * t) * 0.18 * Math.exp(-7 * t) +
+      (t > 0.09
+        ? Math.sin(2 * Math.PI * 783.99 * (t - 0.09)) *
+          0.16 *
+          Math.exp(-6 * (t - 0.09))
+        : 0)) *
+    Math.min(1, t / 0.008) *
+    Math.min(1, (0.6 - t) / 0.05),
+);
+console.log("Wrote click.wav, key.wav and chapter.wav");

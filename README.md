@@ -40,3 +40,42 @@ New screenshots are excluded from Git and held behind review flags. Keep capture
 2. `npm run record` records the document request wizard. It never submits, and blocks all writes except login.
 3. Watch `public/assets/recordings/document-request.webm` for private data (ignored by Git).
 4. `npm run dev`, then open the `LiveDemoPilot` composition. The camera follows each click, with click and key sounds.
+
+## Full enrollment flow (real recording)
+
+Records application → Registrar approval → account setup → enrollment → section assignment → Cashier payment → final approval → Certificate of Registration.
+
+This flow creates and approves records, so it runs on a **separate demo database**, never your main one. Start MySQL first. In PowerShell, from this folder:
+
+1. Create the demo database (once, or again to reset the demo passwords):
+
+   ```powershell
+   C:\php84\php.exe scripts\demo-db-setup.php C:\Users\JEREMY\centralized_enrollment_for_DTC
+   ```
+
+   It adds `.env.demo` to the app, creates `<your database>_demo`, and writes `demo.local.json`. Both files hold secrets: do not commit or share them. Use the PHP version your app requires.
+
+2. In a second PowerShell window, serve the demo copy and leave it running:
+
+   ```powershell
+   cd C:\Users\JEREMY\centralized_enrollment_for_DTC
+   $env:APP_ENV="demo"
+   C:\php84\php.exe artisan serve --port=8001 --no-reload
+   ```
+
+   Use a window used only for the demo, because `APP_ENV` stays set until you close it. Your normal app can stay on port 8000.
+
+3. Record, then preview:
+
+   ```powershell
+   npm run record:flow
+   npm run dev
+   ```
+
+   Open the `FullFlowDemo` composition. Render it with `npx remotion render FullFlowDemo out/dtc-ems-full-flow.mp4`.
+
+Before sharing, watch the video. Everything in it should be fictional.
+
+The recorder signs in the generated demo staff accounts first. They exist only in the demo database, so if port 8001 is serving anything else it stops before creating records. The setup assigns plain class sections, so the video shows the Registrar assigning them; if your app publishes a timetable group instead, that step is skipped by the app and the recorder needs adjusting.
+
+If a step fails, the terminal names it and saves `public/assets/recordings/flow/error-<step>.png`.

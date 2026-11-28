@@ -2,6 +2,7 @@ import { Composition } from "remotion";
 import { DTCEMSDemo } from "./DTCEMSDemo";
 import { video } from "./config/timeline";
 import { LiveDemo, liveDemoMetadata } from "./LiveDemo";
+import { FlowDemo, flowDemoMetadata } from "./FlowDemo";
 
 export const MyComposition = () => {
   return (
@@ -13,6 +14,16 @@ export const MyComposition = () => {
         fps={30}
         width={1920}
         height={1080}
+      />
+      <Composition
+        id="FullFlowDemo"
+        component={FlowDemo}
+        durationInFrames={90}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{ flow: null }}
+        calculateMetadata={flowDemoMetadata}
       />
       <Composition
         id="LiveDemoPilot"

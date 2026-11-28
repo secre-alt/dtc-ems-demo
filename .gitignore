@@ -3,6 +3,7 @@ dist
 .DS_Store
 .env
 capture.local.json
+demo.local.json
 .capture-sessions/
 public/assets/screenshots/
 public/assets/recordings/
