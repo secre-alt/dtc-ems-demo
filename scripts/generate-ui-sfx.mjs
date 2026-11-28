@@ -38,7 +38,22 @@ write(
 write(
   "key",
   0.045,
-  (t) => noise() * 0.22 * Math.exp(-150 * t) * Math.min(1, t / 0.001),
+  (t) =>
+    (noise() * 0.2 + Math.sin(2 * Math.PI * 1450 * t) * 0.12) *
+    Math.exp(-125 * t) *
+    Math.min(1, t / 0.001),
+);
+write(
+  "success",
+  0.55,
+  (t) =>
+    (Math.sin(2 * Math.PI * 659.25 * t) * Math.exp(-7 * t) +
+      (t > 0.12
+        ? Math.sin(2 * Math.PI * 987.77 * (t - 0.12)) *
+          Math.exp(-8 * (t - 0.12))
+        : 0)) *
+    Math.min(1, t / 0.008) *
+    Math.min(1, (0.55 - t) / 0.04),
 );
 write(
   "chapter",
@@ -53,4 +68,4 @@ write(
     Math.min(1, t / 0.008) *
     Math.min(1, (0.6 - t) / 0.05),
 );
-console.log("Wrote click.wav, key.wav and chapter.wav");
+console.log("Wrote click.wav, key.wav, chapter.wav and success.wav");

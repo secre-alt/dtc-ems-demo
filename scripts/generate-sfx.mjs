@@ -71,6 +71,16 @@ const sounds = {
         0,
       ),
   },
+  // The cursor confirms a selection.
+  click: { size: 0.07, gain: 0.12, make: () => (t) => noise() * decay(t, 90) },
+  // Keyboard input under recorded typing.
+  key: { size: 0.045, gain: 0.035, make: () => (t) => noise() * decay(t, 110) },
+  // Chapter cards in the recorded full-flow demo.
+  chapter: {
+    size: 0.6,
+    gain: 0.08,
+    make: () => (t) => note(t, 523.25, 7) + note(t - 0.09, 783.99, 6),
+  },
 };
 
 function cue(time, type, { pan = 0, hz } = {}) {
@@ -93,6 +103,56 @@ cue(0.1, "chime");
 cue(2, "swoosh", { pan: 0.25 });
 for (const scene of Object.values(scenes).slice(1))
   cue(scene.start + 0.03, "swoosh", { pan: scene.start % 2 ? -0.2 : 0.2 });
+
+// Export a compact cue bed for recordings, which use their own timelines.
+const recordingDuration = 300;
+const recordingLength = rate * recordingDuration;
+const recordingLeft = new Float32Array(recordingLength);
+const recordingRight = new Float32Array(recordingLength);
+for (let time = 0; time < recordingDuration; time += 4)
+  for (const type of ["click", "key", "chapter", "success"]) {
+    const { size, gain, make } = sounds[type];
+    const sample = make();
+    const start = time * rate;
+    for (let i = 0; i < size * rate; i++) {
+      const value = sample(i / rate) * gain;
+      recordingLeft[start + i] += value * Math.SQRT1_2;
+      recordingRight[start + i] += value * Math.SQRT1_2;
+    }
+  }
+let recordingPeak = 0;
+for (let i = 0; i < recordingLength; i++)
+  recordingPeak = Math.max(
+    recordingPeak,
+    Math.abs(recordingLeft[i]),
+    Math.abs(recordingRight[i]),
+  );
+assert(recordingPeak > 0.01, "Silent recording cue bed");
+const recordingPcm = Buffer.alloc(44 + recordingLength * 4);
+recordingPcm.write("RIFF", 0);
+recordingPcm.writeUInt32LE(recordingPcm.length - 8, 4);
+recordingPcm.write("WAVEfmt ", 8);
+recordingPcm.writeUInt32LE(16, 16);
+recordingPcm.writeUInt16LE(1, 20);
+recordingPcm.writeUInt16LE(2, 22);
+recordingPcm.writeUInt32LE(rate, 24);
+recordingPcm.writeUInt32LE(rate * 4, 28);
+recordingPcm.writeUInt16LE(4, 32);
+recordingPcm.writeUInt16LE(16, 34);
+recordingPcm.write("data", 36);
+recordingPcm.writeUInt32LE(recordingLength * 4, 40);
+for (let i = 0; i < recordingLength; i++) {
+  recordingPcm.writeInt16LE(
+    Math.max(-32768, Math.min(32767, Math.round((recordingLeft[i] / recordingPeak) * 16384))),
+    44 + i * 4,
+  );
+  recordingPcm.writeInt16LE(
+    Math.max(-32768, Math.min(32767, Math.round((recordingRight[i] / recordingPeak) * 16384))),
+    46 + i * 4,
+  );
+}
+mkdirSync("public/assets/audio", { recursive: true });
+writeFileSync("public/assets/audio/recording-effects.wav", recordingPcm);
 
 for (const [name, data] of Object.entries(shotData)) {
   const scene = scenes[name];
