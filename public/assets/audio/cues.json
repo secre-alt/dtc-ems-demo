@@ -16,6 +16,10 @@
       "type": "swoosh"
     },
     {
+      "time": 12.03,
+      "type": "swoosh"
+    },
+    {
       "time": 18.03,
       "type": "slide"
     },
@@ -30,6 +34,10 @@
     {
       "time": 24.32,
       "type": "tick"
+    },
+    {
+      "time": 30.03,
+      "type": "swoosh"
     },
     {
       "time": 30.03,
@@ -64,6 +72,10 @@
       "type": "swoosh"
     },
     {
+      "time": 65.03,
+      "type": "swoosh"
+    },
+    {
       "time": 72.53,
       "type": "slide"
     },
@@ -92,6 +104,10 @@
       "type": "swoosh"
     },
     {
+      "time": 95.03,
+      "type": "swoosh"
+    },
+    {
       "time": 102.53,
       "type": "slide"
     },
@@ -114,6 +130,10 @@
     {
       "time": 118.1,
       "type": "success"
+    },
+    {
+      "time": 125.03,
+      "type": "swoosh"
     },
     {
       "time": 125.03,
@@ -152,6 +172,10 @@
       "type": "swoosh"
     },
     {
+      "time": 160.03,
+      "type": "swoosh"
+    },
+    {
       "time": 170,
       "type": "slide"
     },
@@ -174,6 +198,10 @@
     {
       "time": 174.333,
       "type": "pop"
+    },
+    {
+      "time": 185.03,
+      "type": "swoosh"
     },
     {
       "time": 185.15,
