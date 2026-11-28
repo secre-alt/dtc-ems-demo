@@ -110,7 +110,8 @@ export const LiveDemo = ({ recording }: LiveDemoProps) => {
           </Sequence>
         );
       })}
-      <Audio src={staticFile("assets/audio/sound-design.wav")} volume={0.65} />
+      <Audio src={staticFile("assets/audio/sound-design.wav")} volume={0.55} />
+      <Audio src={staticFile("assets/audio/recording-effects.wav")} volume={0.28} />
     </AbsoluteFill>
   );
 };
