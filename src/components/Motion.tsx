@@ -40,13 +40,21 @@ export const AnimatedText = ({
         }),
         translate: interpolate(
           frame - delay,
-          [0, 32],
-          ["0px 34px", "0px 0px"],
+          [0, 34],
+          ["0px 42px", "0px 0px"],
           {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",
             easing: Easing.bezier(0.16, 1, 0.3, 1),
           },
+        ),
+        scale: String(
+          0.985 +
+            0.015 * interpolate(frame - delay, [0, 34], [0, 1], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+              easing: Easing.bezier(0.16, 1, 0.3, 1),
+            }),
         ),
       }}
     >

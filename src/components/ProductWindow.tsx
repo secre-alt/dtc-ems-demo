@@ -121,7 +121,7 @@ export const ProductWindow = ({
   children: React.ReactNode;
 }) => {
   const frame = useCurrentFrame();
-  const enter = interpolate(frame, [0, 32], [0, 1], {
+  const enter = interpolate(frame, [0, 42], [0, 1], {
     ...clamp,
     easing: arrive,
   });
@@ -136,8 +136,8 @@ export const ProductWindow = ({
         boxShadow: "0 2px 6px #0b122014, 0 30px 70px #0b122026",
         outline: "1px solid #0b12201a",
         opacity: interpolate(frame, [0, 14], [0, 1], clamp),
-        translate: `0px ${(1 - enter) * 46}px`,
-        scale: String(0.975 + 0.025 * enter),
+        translate: `0px ${(1 - enter) * 58}px`,
+        scale: String(0.965 + 0.035 * enter),
       }}
     >
       <div

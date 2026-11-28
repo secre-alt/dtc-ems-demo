@@ -91,6 +91,7 @@ function cue(time, type, { pan = 0, hz } = {}) {
 // Opening: logo, then the landing window.
 cue(0.1, "chime");
 cue(2, "swoosh", { pan: 0.25 });
+cue(12.03, "swoosh", { pan: -0.25 });
 
 for (const [name, data] of Object.entries(shotData)) {
   const scene = scenes[name];
