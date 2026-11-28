@@ -141,7 +141,7 @@ export const createActor = (page) => {
 
   const keys = async (text, delay = 42) => {
     for (const char of text) {
-      events.push({ type: "key", time: now() });
+      events.push({ type: "key", time: now(), space: char === " " });
       await page.keyboard.type(char);
       await wait(delay);
     }

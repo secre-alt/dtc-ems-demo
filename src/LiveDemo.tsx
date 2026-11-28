@@ -1,14 +1,14 @@
-import { Audio, Video } from "@remotion/media";
+import { Video } from "@remotion/media";
 import {
   AbsoluteFill,
   CalculateMetadataFunction,
   Easing,
-  Sequence,
   interpolate,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
+import { InteractionSounds, TypingKeyboard } from "./components/Interaction";
 import { theme } from "./config/theme";
 
 const FPS = 30;
@@ -99,19 +99,15 @@ export const LiveDemo = ({ recording }: LiveDemoProps) => {
           muted
         />
       </AbsoluteFill>
-      {recording.events.map((event, i) => {
-        const from = Math.round((event.time - recording.trim) * fps);
-        return from < 0 ? null : (
-          <Sequence key={i} from={from} durationInFrames={4} layout="none">
-            <Audio
-              src={staticFile(`assets/audio/${event.type}.wav`)}
-              volume={event.type === "click" ? 0.7 : 0.35}
-            />
-          </Sequence>
-        );
-      })}
-      <Audio src={staticFile("assets/audio/sound-design.wav")} volume={0.55} />
-      <Audio src={staticFile("assets/audio/recording-effects.wav")} volume={0.28} />
+      <TypingKeyboard
+        time={recording.trim + frame / fps}
+        events={recording.events}
+      />
+      <InteractionSounds
+        events={recording.events}
+        trim={recording.trim}
+        fps={fps}
+      />
     </AbsoluteFill>
   );
 };

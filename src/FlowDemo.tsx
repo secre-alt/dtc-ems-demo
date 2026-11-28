@@ -3,13 +3,17 @@ import {
   AbsoluteFill,
   CalculateMetadataFunction,
   Easing,
-  Sequence,
   Series,
   interpolate,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
+import {
+  InteractionSounds,
+  SoundEvent,
+  TypingKeyboard,
+} from "./components/Interaction";
 import { theme } from "./config/theme";
 
 const FPS = 30;
@@ -27,6 +31,7 @@ type Event = {
   time: number;
   x?: number;
   y?: number;
+  space?: boolean;
 };
 type Scene = {
   id: string;
@@ -82,6 +87,26 @@ const camera = (time: number, events: Event[], flow: Flow) => {
   return state;
 };
 
+// A page change gets a whoosh. The last one is the step's result, so it gets
+// the success sound instead.
+const soundsFor = (events: Event[]) => {
+  const done = events.filter((event) => event.type === "wide").at(-1);
+  const sounds: SoundEvent[] = events.map((event) => ({
+    // A whoosh is loudest in its middle. This puts that on the fastest part of
+    // the camera's pull back.
+    time:
+      event.type === "wide" && event !== done ? event.time + 0.08 : event.time,
+    space: event.space,
+    type:
+      event.type !== "wide"
+        ? event.type
+        : event === done
+          ? "success"
+          : "whoosh",
+  }));
+  return { sounds, done: done?.time ?? null };
+};
+
 const ChapterCard = ({
   scene,
   step,
@@ -93,7 +118,15 @@ const ChapterCard = ({
 }) => {
   const frame = useCurrentFrame();
   const rise = interpolate(frame, [0, 18], [0, 1], { ...clamp, easing: ease });
-  const opacity = interpolate(frame, [CARD - 8, CARD], [1, 0], clamp);
+  const opacity = interpolate(frame, [CARD - 10, CARD], [1, 0], clamp);
+  const leave = interpolate(frame, [CARD - 10, CARD], [0, -24], {
+    ...clamp,
+    easing: ease,
+  });
+  const fill = interpolate(frame, [14, 40], [0, 1], {
+    ...clamp,
+    easing: ease,
+  });
   return (
     <AbsoluteFill
       style={{ backgroundColor: theme.ink, fontFamily: theme.font }}
@@ -104,7 +137,7 @@ const ChapterCard = ({
           justifyContent: "center",
           padding: "0 180px",
           opacity: rise * opacity,
-          translate: `0px ${(1 - rise) * 28}px`,
+          translate: `0px ${(1 - rise) * 28 + leave}px`,
           scale: String(0.985 + 0.015 * rise),
         }}
       >
@@ -133,9 +166,26 @@ const ChapterCard = ({
                 width: 76,
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: i < step ? theme.blue : "#33363d",
+                overflow: "hidden",
+                backgroundColor: "#33363d",
+                // The bars arrive one after another.
+                opacity: interpolate(
+                  frame,
+                  [6 + i * 2, 14 + i * 2],
+                  [0, 1],
+                  clamp,
+                ),
               }}
-            />
+            >
+              <div
+                style={{
+                  height: "100%",
+                  // Finished steps are full. The new one fills in view.
+                  width: `${(i < step - 1 ? 1 : i === step - 1 ? fill : 0) * 100}%`,
+                  backgroundColor: theme.blue,
+                }}
+              />
+            </div>
           ))}
         </div>
       </AbsoluteFill>
@@ -146,7 +196,22 @@ const ChapterCard = ({
 const Clip = ({ scene, flow }: { scene: Scene; flow: Flow }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const { x, y, zoom } = camera(scene.trim + frame / fps, scene.events, flow);
+  const time = scene.trim + frame / fps;
+  const { x, y, zoom } = camera(time, scene.events, flow);
+  const { sounds, done } = soundsFor(scene.events);
+  const complete = done !== null && time >= done;
+  const landed = complete
+    ? interpolate(time - done, [0, 0.35], [0, 1], {
+        ...clamp,
+        easing: Easing.bezier(0.25, 0.8, 0.25, 1),
+      })
+    : 1;
+  const progress = interpolate(
+    frame,
+    [0, clipFrames(scene) - 1],
+    [0, 1],
+    clamp,
+  );
   return (
     <AbsoluteFill style={{ backgroundColor: "#fff", overflow: "hidden" }}>
       {/* An origin inside the frame never exposes an empty edge. */}
@@ -176,19 +241,39 @@ const Clip = ({ scene, flow }: { scene: Scene; flow: Flow }) => {
           translate: `0px ${interpolate(frame, [0, 20], [10, 0], { ...clamp, easing: ease })}px`,
         }}
       >
-        <span style={{ color: theme.gold }}>●</span> {scene.role}
+        <span
+          style={{
+            display: "inline-block",
+            color: complete ? "#4ade80" : theme.gold,
+            scale: String(1 + (1 - landed) * 0.7),
+          }}
+        >
+          {complete ? "✓" : "●"}
+        </span>{" "}
+        {scene.role}
+        {complete ? " · Step complete" : ""}
       </div>
-      {scene.events.map((event, i) => {
-        const from = Math.round((event.time - scene.trim) * fps);
-        return event.type === "wide" || from < 0 ? null : (
-          <Sequence key={i} from={from} durationInFrames={4} layout="none">
-            <Audio
-              src={staticFile(`assets/audio/${event.type}.wav`)}
-              volume={event.type === "click" ? 0.7 : 0.35}
-            />
-          </Sequence>
-        );
-      })}
+      {/* How far through this step the video is. */}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+          height: 6,
+          width: `${progress * 100}%`,
+          backgroundColor: theme.blue,
+        }}
+      />
+      <TypingKeyboard time={time} events={scene.events} />
+      <InteractionSounds events={sounds} trim={scene.trim} fps={fps} />
+      {/* Eases from the chapter card into the recording. */}
+      <AbsoluteFill
+        style={{
+          backgroundColor: theme.ink,
+          opacity: interpolate(frame, [0, 10], [1, 0], clamp),
+          pointerEvents: "none",
+        }}
+      />
     </AbsoluteFill>
   );
 };
@@ -210,8 +295,7 @@ export const FlowDemo = ({ flow }: FlowDemoProps) => {
     );
   }
   return (
-    <AbsoluteFill>
-      <Series>
+    <Series>
       {flow.scenes.flatMap((scene, i) => [
         <Series.Sequence key={`${scene.id}-card`} durationInFrames={CARD}>
           <ChapterCard scene={scene} step={i + 1} total={flow.scenes.length} />
@@ -220,9 +304,6 @@ export const FlowDemo = ({ flow }: FlowDemoProps) => {
           <Clip scene={scene} flow={flow} />
         </Series.Sequence>,
       ])}
-      </Series>
-      <Audio src={staticFile("assets/audio/sound-design.wav")} volume={0.55} />
-      <Audio src={staticFile("assets/audio/recording-effects.wav")} volume={0.28} />
-    </AbsoluteFill>
+    </Series>
   );
 };
