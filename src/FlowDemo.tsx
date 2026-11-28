@@ -105,6 +105,7 @@ const ChapterCard = ({
           padding: "0 180px",
           opacity: rise * opacity,
           translate: `0px ${(1 - rise) * 28}px`,
+          scale: String(0.985 + 0.015 * rise),
         }}
       >
         <div style={{ color: theme.gold, fontSize: 34, fontWeight: 700 }}>
@@ -118,6 +119,8 @@ const ChapterCard = ({
             lineHeight: 1.12,
             marginTop: 24,
             maxWidth: 1400,
+            opacity: interpolate(frame, [5, 20], [0, 1], { ...clamp }),
+            translate: `0px ${interpolate(frame, [0, 22], [20, 0], { ...clamp, easing: ease })}px`,
           }}
         >
           {scene.title}
@@ -160,7 +163,7 @@ const Clip = ({ scene, flow }: { scene: Scene; flow: Flow }) => {
         style={{
           position: "absolute",
           left: "50%",
-          translate: "-50% 0",
+          transform: "translateX(-50%)",
           bottom: 32,
           padding: "14px 26px",
           borderRadius: 40,
@@ -169,6 +172,8 @@ const Clip = ({ scene, flow }: { scene: Scene; flow: Flow }) => {
           fontFamily: theme.font,
           fontSize: 26,
           fontWeight: 700,
+          opacity: interpolate(frame, [0, 14], [0, 1], clamp),
+          translate: `0px ${interpolate(frame, [0, 20], [10, 0], { ...clamp, easing: ease })}px`,
         }}
       >
         <span style={{ color: theme.gold }}>●</span> {scene.role}
@@ -205,7 +210,8 @@ export const FlowDemo = ({ flow }: FlowDemoProps) => {
     );
   }
   return (
-    <Series>
+    <AbsoluteFill>
+      <Series>
       {flow.scenes.flatMap((scene, i) => [
         <Series.Sequence key={`${scene.id}-card`} durationInFrames={CARD}>
           <ChapterCard scene={scene} step={i + 1} total={flow.scenes.length} />
@@ -214,6 +220,8 @@ export const FlowDemo = ({ flow }: FlowDemoProps) => {
           <Clip scene={scene} flow={flow} />
         </Series.Sequence>,
       ])}
-    </Series>
+      </Series>
+      <Audio src={staticFile("assets/audio/sound-design.wav")} volume={0.65} />
+    </AbsoluteFill>
   );
 };

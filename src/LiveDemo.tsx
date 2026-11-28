@@ -84,7 +84,14 @@ export const LiveDemo = ({ recording }: LiveDemoProps) => {
     <AbsoluteFill style={{ backgroundColor: "#fff", overflow: "hidden" }}>
       {/* An origin inside the frame never exposes an empty edge. */}
       <AbsoluteFill
-        style={{ transformOrigin: `${x * 100}% ${y * 100}%`, scale: `${zoom}` }}
+        style={{
+          transformOrigin: `${x * 100}% ${y * 100}%`,
+          scale: `${zoom}`,
+          opacity: interpolate(frame, [0, 14], [0, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          }),
+        }}
       >
         <Video
           src={staticFile(`${SOURCE}.webm`)}
@@ -103,6 +110,7 @@ export const LiveDemo = ({ recording }: LiveDemoProps) => {
           </Sequence>
         );
       })}
+      <Audio src={staticFile("assets/audio/sound-design.wav")} volume={0.65} />
     </AbsoluteFill>
   );
 };
