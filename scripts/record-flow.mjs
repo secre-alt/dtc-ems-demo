@@ -165,6 +165,8 @@ const signInStaff = async (role, landing) => {
 };
 
 const scenes = [];
+// The last measured gap between the recorder clock and the video.
+let lastOffset = 0;
 const record = async (context, id, title, role, path, play) => {
   const page = await context.newPage();
   page.setDefaultTimeout(30000);
@@ -187,11 +189,16 @@ const record = async (context, id, title, role, path, play) => {
     const file = `${String(scenes.length + 1).padStart(2, "0")}-${id}.webm`;
     await video.saveAs(`${out}/${file}`);
     await video.delete();
-    const found = await findFlashEnd(browser, `${out}/${file}`, marker + 5);
+    const found = await findFlashEnd(browser, `${out}/${file}`, marker + 30);
+    // A missed flash only affects timing, and the step has already changed the
+    // demo records, so keep going instead of throwing the whole run away.
     if (found === null)
-      throw new Error("Could not find the timing flash in the recording.");
+      console.warn(
+        `! ${title}: timing flash not found. Check that sounds and zooms line up in this clip.`,
+      );
     // Convert every recorder time into a time inside the video file.
-    const offset = marker - found;
+    const offset = found === null ? lastOffset : marker - found;
+    lastOffset = offset;
     scenes.push({
       id,
       title,

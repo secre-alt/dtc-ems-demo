@@ -13,13 +13,25 @@ export const flash = async (actor) => {
     cover.style.cssText =
       "position:fixed;inset:0;z-index:2147483647;background:#ff00ff";
     document.documentElement.append(cover);
+    // The recorder saves a frame only when the screen changes, so keep the
+    // flash changing (by an invisible amount) while it is up.
+    let odd = false;
+    cover.timer = setInterval(() => {
+      odd = !odd;
+      cover.style.background = odd ? "#fe00fe" : "#ff00ff";
+    }, 40);
+    // Start counting only after the flash has really been drawn.
+    return new Promise((drawn) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => drawn())),
+    );
   }, FLASH_ID);
-  await actor.wait(500);
+  await actor.wait(1000);
   const removed = actor.now();
-  await actor.page.evaluate(
-    (id) => document.getElementById(id).remove(),
-    FLASH_ID,
-  );
+  await actor.page.evaluate((id) => {
+    const cover = document.getElementById(id);
+    clearInterval(cover.timer);
+    cover.remove();
+  }, FLASH_ID);
   await actor.wait(500);
   return removed;
 };
